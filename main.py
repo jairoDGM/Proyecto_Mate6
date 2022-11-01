@@ -20,6 +20,9 @@ def ventana_main():
     label1.place(x=0,y=0)
     #configurando fondo
 
+    ###########################################################################
+    #COLOCACION TITULOS
+
     #se coloca titulo y se centra en pantalla
     prueba = "SERIE DE FOURIER TRUNCADA"
     titulo = Text(main_window,fg="blue",bg="white", height=1, width=29, font=('Helvetica bold',26))
@@ -28,42 +31,132 @@ def ventana_main():
     titulo.tag_add("tag_titulo", "1.0", "end")
     titulo.pack()
     #se coloca titulo y se centra en pantalla
-    fila1 = generador_textos(main_window,1)
-    fila2 = generador_textos(main_window,2)
-    fila3 = generador_textos(main_window,3)
-    print("fila1 " + str(fila1))
-    print("fila2 " + str(fila2))
-    print("fila3 " + str(fila3))
 
+    #titulo de resultados
+    texto0 = tkinter.Label(main_window, text = "RESULTADOS", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 25")
+    texto0.place(x = 290, y = 230)
+
+    #COLOCACION TITULOS
+    ############################################################################
     
+
+    #####################################################################
+    #obtencion de intervalos 1 y valor 1
+    data_val1= tkinter.DoubleVar()
+    texto1 = tkinter.Label(main_window, text = "Escriba el primer valor de f(t): ", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 9")
+    texto1.place(x = 20, y = 55)
+    val1 = tkinter.Entry(main_window, textvariable = data_val1 , width = 5, relief = "flat")
+    val1.place(x = 190, y = 55)
+
+    data_incial1= tkinter.DoubleVar()
+    texto2 = tkinter.Label(main_window, text = "Escriba los intervalos para el valor de f(t): ", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 9")
+    texto2.place(x = 250, y = 55)
+    inicia1 = tkinter.Entry(main_window, textvariable = data_incial1 , width = 5, relief = "flat")
+    inicia1.place(x = 490, y = 55)
+
+    texto3 = tkinter.Label(main_window, text = " < t < ", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 9")
+    texto3.place(x = 520, y = 55)
+
+    data_final1=tkinter.DoubleVar()
+    final1 = tkinter.Entry(main_window, textvariable = data_final1 , width = 5, relief = "flat")
+    final1.place(x = 555, y = 55)
+    #obtencion de intervalos 1 y valor 1
+    ###############################################################################
+
+    #####################################################################
+    #obtencion de intervalos 2 y valor 2
+    data_val2=tkinter.DoubleVar()
+    texto4 = tkinter.Label(main_window, text = "Escriba el segundo valor de f(t): ", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 9")
+    texto4.place(x = 20, y = 2*55)
+    val2 = tkinter.Entry(main_window, textvariable = data_val2 , width = 5, relief = "flat")
+    val2.place(x = 198, y = 2*55)
+
+    data_incial2=tkinter.DoubleVar()
+    texto5 = tkinter.Label(main_window, text = "Escriba los intervalos para el valor de f(t): ", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 9")
+    texto5.place(x = 250, y = 2*55)
+    inicia2 = tkinter.Entry(main_window, textvariable = data_incial2 , width = 5, relief = "flat")
+    inicia2.place(x = 490, y = 2*55)
+
+    texto6 = tkinter.Label(main_window, text = " < t < ", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 9")
+    texto6.place(x = 520, y = 2*55)
+
+    data_final2=tkinter.DoubleVar()
+    final2 = tkinter.Entry(main_window, textvariable = data_final2 , width = 5, relief = "flat")
+    final2.place(x = 555, y = 2*55)
+    #obtencion de intervalos 2 y valor 2
+    ###############################################################################
+
+    #####################################################################
+    #obtencion de intervalos 3 y valor 3
+    data_val3=tkinter.DoubleVar()
+    texto7 = tkinter.Label(main_window, text = "Escriba el tercer valor de f(t): ", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 9")
+    texto7.place(x = 20, y = 3*55)
+    val3 = tkinter.Entry(main_window, textvariable = data_val3 , width = 5, relief = "flat")
+    val3.place(x = 182, y = 3*55)
+
+    data_incial3=tkinter.DoubleVar()
+    texto8 = tkinter.Label(main_window, text = "Escriba los intervalos para el valor de f(t): ", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 9")
+    texto8.place(x = 250, y = 3*55)
+    inicia3 = tkinter.Entry(main_window, textvariable = data_incial3 , width = 5, relief = "flat")
+    inicia3.place(x = 490, y = 3*55)
+
+    texto9 = tkinter.Label(main_window, text = " < t < ", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 9")
+    texto9.place(x = 520, y = 3*55)
+
+    data_final3=tkinter.DoubleVar()
+    final3 = tkinter.Entry(main_window, textvariable = data_final3 , width = 5, relief = "flat")
+    final3.place(x = 555, y = 3*55)
+    #obtencion de intervalos 3 y valor 3
+    ###############################################################################
+
+    ################################################################
+    #Configuracion de botones en main_window
+
+    #envia y realiza todos los calculos con los datos recopilados
+    botoncalculo = tkinter.Button(main_window, text = "Calcular", command =lambda: accionador_calculador(data_incial1.get(),data_final3.get(), main_window), cursor = "hand2", width = 12, relief = "flat")
+    botoncalculo.place(x = 600, y = 78)
+
+    #limpia todos los datos de los inputs
+    cleaner = tkinter.Button(main_window, text = "Limpiar Datos", command =lambda: clean_data(val1,inicia1,final1,val2,inicia2,final2,val3,inicia3,final3), cursor = "hand2", width = 12, relief = "flat")
+    cleaner.place(x = 600, y = 2*68)
+
+    #Configuracion de botones en main_window
+    ####################################################################    
 
     main_window.mainloop()
     
-def generador_textos(ventana,number):
-    resultado = []
-    #####################################################################
-    #obtencion de intervalos 1 y valor 1
-    data_val1=""
-    texto1 = tkinter.Label(ventana, text = "Escriba el primer valor de f(t): ", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 9")
-    texto1.place(x = 20, y = number*55)
-    val1 = tkinter.Entry(ventana, textvariable = data_val1 , width = 5, relief = "flat")
-    val1.place(x = 190, y = number*55)
+#definicion que limpia los datos de los inputs
+def clean_data(entry1,entry2,entry3,entry4,entry5,entry6,entry7,entry8,entry9):
+    entry1.delete(0, END)
+    entry2.delete(0, END)
+    entry3.delete(0, END)
+    entry4.delete(0, END)
+    entry5.delete(0, END)
+    entry6.delete(0, END)
+    entry7.delete(0, END)
+    entry8.delete(0, END)
+    entry9.delete(0, END)
+    print("clean data funcionando!")
+    
+#def que acciona todos los calculos
+def accionador_calculador(inicial,final,ventana):
+    periodo = calc_periodo(inicial,final)
+    texto = tkinter.Label(ventana, text = "Periodo", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 10")
+    texto.place(x = 20, y = 270)
+    respuesta0 = tkinter.Label(ventana, text = periodo, relief = "flat", bg = '#1F618D', fg = "#17202A", font = "Helvetica 10")
+    respuesta0.place(x = 70, y = 270)
+    print("accionador calculador funcionando! " + str(periodo))
 
-    data_incial1=""
-    texto2 = tkinter.Label(ventana, text = "Escriba los intervalos para el valor de f(t): ", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 9")
-    texto2.place(x = 250, y = number*55)
-    inicia1 = tkinter.Entry(ventana, textvariable = data_incial1 , width = 5, relief = "flat")
-    inicia1.place(x = 490, y = number*55)
 
-    texto3 = tkinter.Label(ventana, text = " < t < ", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 9")
-    texto3.place(x = 520, y = number*55)
+#calcula el periodo "T" de la funcion especificada con los intervalos
+def calc_periodo(intervalo_incial, intervalo_final):
+    print("intervalo inicial " + str(intervalo_incial))
+    print("intervalo final " + str(intervalo_final))
+    periodo=0
+    while(intervalo_incial < intervalo_final):
+        intervalo_incial = intervalo_incial + 1
+        periodo = periodo + 1
+    return periodo  #duda de si asi se calcula el periodo "periodo/2"
 
-    data_final1=""
-    final1 = tkinter.Entry(ventana, textvariable = data_final1 , width = 5, relief = "flat")
-    final1.place(x = 555, y = number*55)
-    #obtencion de intervalos 1 y valor 1
-    ###############################################################################
-    resultado = [data_val1,data_incial1,data_final1]
-    return resultado
 
 ventana_main()
