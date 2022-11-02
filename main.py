@@ -1,9 +1,11 @@
 #IMPORTS DE LIBRERIAS NECESARIAS
-from textwrap import wrap
+from cProfile import label
+from textwrap import fill, wrap
 import tkinter
 from tkinter.ttk import Label
 from tkinter import *
 from tokenize import String
+from PIL import ImageTk,Image
 #IMPORTS DE LIBRERIAS NECESARIAS
 
 def ventana_main():
@@ -140,12 +142,48 @@ def clean_data(entry1,entry2,entry3,entry4,entry5,entry6,entry7,entry8,entry9):
     
 #def que acciona todos los calculos
 def accionador_calculador(inicial,final,ventana):
+    #------
+    #Llama al metodo que calcula el periodo y lo despliega en pantalla
     periodo = calc_periodo(inicial,final)
     texto = tkinter.Label(ventana, text = "Periodo", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 10")
     texto.place(x = 20, y = 270)
     respuesta0 = tkinter.Label(ventana, text = periodo, relief = "flat", bg = '#1F618D', fg = "#17202A", font = "Helvetica 10")
     respuesta0.place(x = 70, y = 270)
-    print("accionador calculador funcionando! " + str(periodo))
+    #Llama al metodo que calcula el periodo y lo despliega en pantalla
+    #-----
+    #-----
+    #recibe un array con los resultados de los coeficientes y lo despliega en pantalla
+    dato_prueba=5
+    array = calc_coeficientes(dato_prueba)
+        #-para a0
+    texto = tkinter.Label(ventana, text = "Coeficiente A0", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 10")
+    texto.place(x = 20, y = 300)
+    respuesta0 = tkinter.Label(ventana, text = array.pop(), relief = "flat", bg = '#1F618D', fg = "#17202A", font = "Helvetica 10")
+    respuesta0.place(x = 110, y = 300)
+        #-para an
+    texto = tkinter.Label(ventana, text = "Coeficiente An", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 10")
+    texto.place(x = 20, y = 330)
+    respuesta0 = tkinter.Label(ventana, text = array.pop(), relief = "flat", bg = '#1F618D', fg = "#17202A", font = "Helvetica 10")
+    respuesta0.place(x = 110, y = 330)
+        #-para bn
+    texto = tkinter.Label(ventana, text = "Coeficiente Bn", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 10")
+    texto.place(x = 20, y = 360)
+    respuesta0 = tkinter.Label(ventana, text = array.pop(), relief = "flat", bg = '#1F618D', fg = "#17202A", font = "Helvetica 10")
+    respuesta0.place(x = 110, y = 360)
+    #recibe un array con los resultados de los coeficientes y lo despliega en pantalaa
+    #-----
+    #-----
+    #recibe el valor de N de ICE y lo despliega en pantalla
+    n = calc_ice()
+    texto = tkinter.Label(ventana, text = "Valor de N", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 10")
+    texto.place(x = 20, y = 390)
+    respuesta0 = tkinter.Label(ventana, text = n, relief = "flat", bg = '#1F618D', fg = "#17202A", font = "Helvetica 10")
+    respuesta0.place(x = 87, y = 390)
+    #recibe el valor de N de ICE y lo despliega en pantalla
+    #-----
+    #-----
+    #-----
+    print("accionador calculador funcionando!")
 
 
 #calcula el periodo "T" de la funcion especificada con los intervalos
@@ -158,5 +196,18 @@ def calc_periodo(intervalo_incial, intervalo_final):
         periodo = periodo + 1
     return periodo  #duda de si asi se calcula el periodo "periodo/2"
 
+#calcula el valor de los coeficientes de fourier
+def calc_coeficientes(n):
+    array = []
+    array.append("Ecuacion serie de fourier")
+    array.append("coeficiente 3")
+    array.append("coeficiente 2")
+    array.append("coeficiente 1")
+    print("calculo de coeficientes de fourier! ")
+    return array
+
+def calc_ice():
+    print("calculo ICE funcionando!")
+    return "valor de n"
 
 ventana_main()
