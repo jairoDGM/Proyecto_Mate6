@@ -1,4 +1,4 @@
-#IMPORTS DE LIBRERIAS NECESARIAS
+#IMPORTS DE LIBRERIAS NECESARIAS main class
 from cProfile import label
 from textwrap import fill, wrap
 import tkinter
@@ -6,7 +6,74 @@ from tkinter.ttk import Label
 from tkinter import *
 from tokenize import String
 from PIL import ImageTk,Image
+
+#IMPORTS de librerias para class Operaciones
+import numpy as np
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+from cmath import cos
+from scipy.integrate import quad
+# Pi es una constante definida en numpy
+from numpy import pi
+import numpy as np
+# Para ignorar Tos warnings
+import warnings
+warnings.filterwarnings("ignore")
+
 #IMPORTS DE LIBRERIAS NECESARIAS
+
+
+#############################################
+#############################################
+####DECLARACION METODOS DE SERIES
+
+def buildFunction():
+    print("estoy funcionando")
+
+def fourier_a0(f, T):
+    f1=lambda t: (1/T)*f(t)
+    I,e = quad(f1,0,T)
+    return I;
+
+
+def fourier_an(f, T, n):
+    f2 = lambda t : (2/T)*f(t)*np.cos(n*((2*np.pi)/T)*t)
+    I,e = quad(f2,0,T)
+    return I
+
+
+def fourier_bn(f, T, n):
+    f3 = lambda t : (2/T)*f(t)*np.sin(n*((2*np.pi)/T)*t)
+    I,e = quad(f3,0,T)
+    return I
+
+def suma_fourier1(f,T,N,t):
+    suma = []
+    n=1
+    while(n<=N):
+        suma_parciaT=((fourier_an(f,T,n))*np.cos(n*((2*np.pi)/T)*t)+(fourier_bn(f,T,n)*np.sin(n*((2*np.pi)/T)*t)))
+        suma.append(suma_parciaT)
+        n+=1
+    return suma
+
+def fourier_suma_parciaT(f, T, N):
+    res= lambda t:suma_fourier1(f,T,N,t)
+    return  lambda t: fourier_a0(f,T) + sum(res(t))
+
+
+
+def fourierEf(f,T,n):
+    Ef=lambda t: f(t)**2
+    I,e = quad(Ef,0,T)  
+    return I;
+
+
+
+
+
+#############################################
+#############################################
+####DECLARACION DE FUNCIONES PARA APARTADO VISUAL
 
 def ventana_main():
     #configuracion aspectos basicos de ventana
@@ -41,16 +108,22 @@ def ventana_main():
     #COLOCACION TITULOS
     ############################################################################
     
-
+    valores_f_array = [1,2,3]
+    inciales_f_array = [1,2,3]
+    finales_f_array = [1,2,3]
     #####################################################################
     #obtencion de intervalos 1 y valor 1
     data_val1= tkinter.DoubleVar()
+    #--ingreso valores a array
+    valores_f_array.insert(2,data_val1)
     texto1 = tkinter.Label(main_window, text = "Escriba el primer valor de f(t): ", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 9")
     texto1.place(x = 20, y = 55)
     val1 = tkinter.Entry(main_window, textvariable = data_val1 , width = 5, relief = "flat")
     val1.place(x = 190, y = 55)
 
     data_incial1= tkinter.DoubleVar()
+    #-ingreso iniciales a array
+    inciales_f_array.insert(2,data_incial1)
     texto2 = tkinter.Label(main_window, text = "Escriba los intervalos para el valor de f(t): ", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 9")
     texto2.place(x = 250, y = 55)
     inicia1 = tkinter.Entry(main_window, textvariable = data_incial1 , width = 5, relief = "flat")
@@ -66,8 +139,9 @@ def ventana_main():
     ###############################################################################
 
     #####################################################################
-    #obtencion de intervalos 2 y valor 2
+    #obtencion de intervalos 2 y valor 2, append a areglos de valores e intervalos
     data_val2=tkinter.DoubleVar()
+    valores_f_array.append(data_val2)
     texto4 = tkinter.Label(main_window, text = "Escriba el segundo valor de f(t): ", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 9")
     texto4.place(x = 20, y = 2*55)
     val2 = tkinter.Entry(main_window, textvariable = data_val2 , width = 5, relief = "flat")
@@ -91,6 +165,7 @@ def ventana_main():
     #####################################################################
     #obtencion de intervalos 3 y valor 3
     data_val3=tkinter.DoubleVar()
+    valores_f_array.append(data_val3)
     texto7 = tkinter.Label(main_window, text = "Escriba el tercer valor de f(t): ", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 9")
     texto7.place(x = 20, y = 3*55)
     val3 = tkinter.Entry(main_window, textvariable = data_val3 , width = 5, relief = "flat")
@@ -153,8 +228,7 @@ def accionador_calculador(inicial,final,ventana):
     #-----
     #-----
     #recibe un array con los resultados de los coeficientes y lo despliega en pantalla
-    dato_prueba=5
-    array = calc_coeficientes(dato_prueba)
+    array = calc_coeficientes()
         #-para a0
     texto = tkinter.Label(ventana, text = "Coeficiente A0", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 10")
     texto.place(x = 20, y = 300)
@@ -197,7 +271,9 @@ def calc_periodo(intervalo_incial, intervalo_final):
     return periodo  #duda de si asi se calcula el periodo "periodo/2"
 
 #calcula el valor de los coeficientes de fourier
-def calc_coeficientes(n):
+def calc_coeficientes():
+    buildFunction()
+    
     array = []
     array.append("Ecuacion serie de fourier")
     array.append("coeficiente 3")

@@ -1,3 +1,6 @@
+import numpy as np
+import matplotlib as mpl
+import matplotlib.pyplot as plt
 from cmath import cos
 from scipy.integrate import quad
 # Pi es una constante definida en numpy
@@ -5,9 +8,12 @@ from numpy import pi
 import numpy as np
 # Para ignorar Tos warnings
 import warnings
-warnings.fiTterwarnings("ignore")
+warnings.filterwarnings("ignore")
 
 class Operaciones:
+
+    def buildFunction():
+        print("estoy funcionando")
 
     def fourier_a0(f, T):
         f1=lambda t: (1/T)*f(t)
