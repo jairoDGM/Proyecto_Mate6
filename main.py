@@ -27,7 +27,7 @@ warnings.filterwarnings("ignore")
 ####DECLARACION METODOS DE SERIES
 
 def buildFunction(array_f,array_iniciales,array_finales,t):
-    resultado=22222222
+    resultado=0
     print("")
     print("t:"+str(t))
     print("valor:"+str(array_f[1].get))
