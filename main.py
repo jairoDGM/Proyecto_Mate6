@@ -19,7 +19,6 @@ import numpy as np
 # Para ignorar Tos warnings
 import warnings
 warnings.filterwarnings("ignore")
-
 #IMPORTS DE LIBRERIAS NECESARIAS
 
 
@@ -27,8 +26,24 @@ warnings.filterwarnings("ignore")
 #############################################
 ####DECLARACION METODOS DE SERIES
 
-def buildFunction():
-    print("estoy funcionando")
+def buildFunction(array_f,array_iniciales,array_finales,t):
+    resultado=22222222
+    print("")
+    print("t:"+str(t))
+    print("valor:"+str(array_f[1].get))
+    print("incial:"+str(array_iniciales[1].get()))
+    print("final:"+str(array_finales[1].get()))
+    if (t>array_iniciales[0].get()) and (t<array_finales[0].get()):
+        print("entramos en 1")
+        resultado=array_f[0].get()
+    elif (t>array_iniciales[1].get()) and (t<array_finales[1].get()):
+        print("entramos en 2")
+        resultado=array_f[1].get()
+    elif (t>array_iniciales[2].get()) and (t<array_finales[2].get()):
+        print("entramos en 3")
+        resultado=array_f[2].get()
+    print("valor obtenido por y: " + str(resultado))
+    return resultado
 
 def fourier_a0(f, T):
     f1=lambda t: (1/T)*f(t)
@@ -108,22 +123,16 @@ def ventana_main():
     #COLOCACION TITULOS
     ############################################################################
     
-    valores_f_array = [1,2,3]
-    inciales_f_array = [1,2,3]
-    finales_f_array = [1,2,3]
+    
     #####################################################################
     #obtencion de intervalos 1 y valor 1
     data_val1= tkinter.DoubleVar()
-    #--ingreso valores a array
-    valores_f_array.insert(2,data_val1)
     texto1 = tkinter.Label(main_window, text = "Escriba el primer valor de f(t): ", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 9")
     texto1.place(x = 20, y = 55)
     val1 = tkinter.Entry(main_window, textvariable = data_val1 , width = 5, relief = "flat")
     val1.place(x = 190, y = 55)
 
     data_incial1= tkinter.DoubleVar()
-    #-ingreso iniciales a array
-    inciales_f_array.insert(2,data_incial1)
     texto2 = tkinter.Label(main_window, text = "Escriba los intervalos para el valor de f(t): ", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 9")
     texto2.place(x = 250, y = 55)
     inicia1 = tkinter.Entry(main_window, textvariable = data_incial1 , width = 5, relief = "flat")
@@ -141,7 +150,6 @@ def ventana_main():
     #####################################################################
     #obtencion de intervalos 2 y valor 2, append a areglos de valores e intervalos
     data_val2=tkinter.DoubleVar()
-    valores_f_array.append(data_val2)
     texto4 = tkinter.Label(main_window, text = "Escriba el segundo valor de f(t): ", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 9")
     texto4.place(x = 20, y = 2*55)
     val2 = tkinter.Entry(main_window, textvariable = data_val2 , width = 5, relief = "flat")
@@ -165,7 +173,6 @@ def ventana_main():
     #####################################################################
     #obtencion de intervalos 3 y valor 3
     data_val3=tkinter.DoubleVar()
-    valores_f_array.append(data_val3)
     texto7 = tkinter.Label(main_window, text = "Escriba el tercer valor de f(t): ", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 9")
     texto7.place(x = 20, y = 3*55)
     val3 = tkinter.Entry(main_window, textvariable = data_val3 , width = 5, relief = "flat")
@@ -190,7 +197,12 @@ def ventana_main():
     #Configuracion de botones en main_window
 
     #envia y realiza todos los calculos con los datos recopilados
-    botoncalculo = tkinter.Button(main_window, text = "Calcular", command =lambda: accionador_calculador(data_incial1.get(),data_final3.get(), main_window), cursor = "hand2", width = 12, relief = "flat")
+        #---captura de datos e ingreso en multiples tuplas
+    valores_f_array = (data_val1,data_val2,data_final3)
+    inciales_f_array = (data_incial1,data_incial2,data_incial3)
+    finales_f_array = (data_final1,data_final2,data_final3)
+        #--captura de datos e ingreso en multiples tuplas
+    botoncalculo = tkinter.Button(main_window, text = "Calcular", command =lambda: accionador_calculador(valores_f_array,inciales_f_array,finales_f_array, main_window), cursor = "hand2", width = 12, relief = "flat")
     botoncalculo.place(x = 600, y = 78)
 
     #limpia todos los datos de los inputs
@@ -216,10 +228,11 @@ def clean_data(entry1,entry2,entry3,entry4,entry5,entry6,entry7,entry8,entry9):
     print("clean data funcionando!")
     
 #def que acciona todos los calculos
-def accionador_calculador(inicial,final,ventana):
+def accionador_calculador(array_f,array_inciales,array_finales,ventana):
+    print("prueba de array "+ str(array_f[0].get()))
     #------
     #Llama al metodo que calcula el periodo y lo despliega en pantalla
-    periodo = calc_periodo(inicial,final)
+    periodo = calc_periodo(array_inciales[0].get(),array_finales[2].get())
     texto = tkinter.Label(ventana, text = "Periodo", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 10")
     texto.place(x = 20, y = 270)
     respuesta0 = tkinter.Label(ventana, text = periodo, relief = "flat", bg = '#1F618D', fg = "#17202A", font = "Helvetica 10")
@@ -228,7 +241,7 @@ def accionador_calculador(inicial,final,ventana):
     #-----
     #-----
     #recibe un array con los resultados de los coeficientes y lo despliega en pantalla
-    array = calc_coeficientes()
+    array = calc_coeficientes( array_f,array_inciales, array_finales)
         #-para a0
     texto = tkinter.Label(ventana, text = "Coeficiente A0", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 10")
     texto.place(x = 20, y = 300)
@@ -271,9 +284,11 @@ def calc_periodo(intervalo_incial, intervalo_final):
     return periodo  #duda de si asi se calcula el periodo "periodo/2"
 
 #calcula el valor de los coeficientes de fourier
-def calc_coeficientes():
-    buildFunction()
-    
+def calc_coeficientes(array_f,array_inciales, array_finales):
+    #se construye la funcion
+    prueba = buildFunction(array_f,array_inciales, array_finales,0)
+    print("valor de t=0  " + str(prueba)+"!!!!!")
+
     array = []
     array.append("Ecuacion serie de fourier")
     array.append("coeficiente 3")
