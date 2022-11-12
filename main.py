@@ -313,7 +313,8 @@ def calc_periodo(intervalo_incial, intervalo_final):
 #calcula el valor de los coeficientes de fourier
 def calc_ice(array_f,array_inciales, array_finales,T):
     #se construye la funcion
-    funcion_f = buildFunction(array_f,array_inciales,array_finales)
+    t = np.linspace(-1, 1, 500)
+    funcion_f = buildFunction(array_f,array_inciales,array_finales,t)
     operador_ice(funcion_f,T)
 
     array = []
