@@ -30,7 +30,7 @@ def buildFunction(array_f,array_iniciales,array_finales,t):
     resultado=0
     print("")
     print("t:"+str(t))
-    print("valor:"+str(array_f[1].get))
+    print("valor:"+str(array_f[1].get()))
     print("incial:"+str(array_iniciales[1].get()))
     print("final:"+str(array_finales[1].get()))
     if (t>array_iniciales[0].get()) and (t<array_finales[0].get()):
@@ -44,6 +44,12 @@ def buildFunction(array_f,array_iniciales,array_finales,t):
         resultado=array_f[2].get()
     print("valor obtenido por y: " + str(resultado))
     return resultado
+
+
+def fourierEf(f,T):
+    Ef=lambda t: f(t)**2
+    I,e = quad(Ef,0,T)
+    return I;
 
 def fourier_a0(f, T):
     f1=lambda t: (1/T)*f(t)
@@ -75,12 +81,33 @@ def fourier_suma_parciaT(f, T, N):
     res= lambda t:suma_fourier1(f,T,N,t)
     return  lambda t: fourier_a0(f,T) + sum(res(t))
 
+def suma_ice(f,T,t,ef):
+    suma = []
+    n=1
+    salida = False
+    while(salida == False):
+        suma_parciaT=((fourier_an(f,T,n))*np.cos(n*((2*np.pi)/T)*t)+(fourier_bn(f,T,n)*np.sin(n*((2*np.pi)/T)*t)))
+        suma.append(suma_parciaT)
+        n+=1
+        t2 = np.linspace(-1, 1, 500)
+        ploteo = [s(t2) for s in suma]
+        comprobacion = sum(ploteo)
+        if( comprobacion > 0.02*ef(t2) ):
+            salida = True
+    return n
+
+def operador_ice(f,T):
+    resultado=0
+    ef = fourierEf(f,T)
+    a0 = fourier_a0(f,T)
+
+    ecuacion_n = lambda t: ef - ( (a0**2)*T + (T/2)* suma_ice(f,T,t,ef,))
+    print("valor de n para ICE: " + ecuacion_n)
+    an = fourier_an(f,T)
+    ab = fourier_bn(f,T)
 
 
-def fourierEf(f,T,n):
-    Ef=lambda t: f(t)**2
-    I,e = quad(Ef,0,T)  
-    return I;
+
 
 
 
@@ -241,7 +268,7 @@ def accionador_calculador(array_f,array_inciales,array_finales,ventana):
     #-----
     #-----
     #recibe un array con los resultados de los coeficientes y lo despliega en pantalla
-    array = calc_coeficientes( array_f,array_inciales, array_finales)
+    array = calc_ice( array_f,array_inciales, array_finales,periodo)
         #-para a0
     texto = tkinter.Label(ventana, text = "Coeficiente A0", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 10")
     texto.place(x = 20, y = 300)
@@ -261,11 +288,11 @@ def accionador_calculador(array_f,array_inciales,array_finales,ventana):
     #-----
     #-----
     #recibe el valor de N de ICE y lo despliega en pantalla
-    n = calc_ice()
-    texto = tkinter.Label(ventana, text = "Valor de N", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 10")
-    texto.place(x = 20, y = 390)
-    respuesta0 = tkinter.Label(ventana, text = n, relief = "flat", bg = '#1F618D', fg = "#17202A", font = "Helvetica 10")
-    respuesta0.place(x = 87, y = 390)
+    #n = calc_ice()
+    #texto = tkinter.Label(ventana, text = "Valor de N", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 10")
+    #texto.place(x = 20, y = 390)
+    #respuesta0 = tkinter.Label(ventana, text = n, relief = "flat", bg = '#1F618D', fg = "#17202A", font = "Helvetica 10")
+    #respuesta0.place(x = 87, y = 390)
     #recibe el valor de N de ICE y lo despliega en pantalla
     #-----
     #-----
@@ -284,10 +311,10 @@ def calc_periodo(intervalo_incial, intervalo_final):
     return periodo  #duda de si asi se calcula el periodo "periodo/2"
 
 #calcula el valor de los coeficientes de fourier
-def calc_coeficientes(array_f,array_inciales, array_finales):
+def calc_ice(array_f,array_inciales, array_finales,T):
     #se construye la funcion
-    prueba = buildFunction(array_f,array_inciales, array_finales,0)
-    print("valor de t=0  " + str(prueba)+"!!!!!")
+    funcion_f = buildFunction
+    operador_ice(funcion_f,T)
 
     array = []
     array.append("Ecuacion serie de fourier")
@@ -297,8 +324,6 @@ def calc_coeficientes(array_f,array_inciales, array_finales):
     print("calculo de coeficientes de fourier! ")
     return array
 
-def calc_ice():
-    print("calculo ICE funcionando!")
-    return "valor de n"
+
 
 ventana_main()
