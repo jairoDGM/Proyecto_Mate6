@@ -101,7 +101,7 @@ def operador_ice(f,T):
     ef = fourierEf(f,T)
     a0 = fourier_a0(f,T)
 
-    ecuacion_n = lambda t: ef - ( (a0**2)*T + (T/2)* suma_ice(f,T,t,ef,))
+    ecuacion_n = lambda t: ef - ( (a0**2)*T + (T/2)* suma_ice(f,T,t,ef))
     print("valor de n para ICE: " + ecuacion_n)
     an = fourier_an(f,T)
     ab = fourier_bn(f,T)
@@ -313,7 +313,7 @@ def calc_periodo(intervalo_incial, intervalo_final):
 #calcula el valor de los coeficientes de fourier
 def calc_ice(array_f,array_inciales, array_finales,T):
     #se construye la funcion
-    funcion_f = buildFunction
+    funcion_f = buildFunction(array_f,array_inciales,array_finales)
     operador_ice(funcion_f,T)
 
     array = []
