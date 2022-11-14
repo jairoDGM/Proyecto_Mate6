@@ -13,6 +13,8 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from cmath import cos
 from scipy.integrate import quad
+from sympy import *
+import sympy as sym
 # Pi es una constante definida en numpy
 from numpy import pi
 import numpy as np
@@ -46,10 +48,27 @@ def buildFunction(array_f,array_iniciales,array_finales,t):
     return resultado
 
 
-def fourierEf(f,T):
-    Ef=lambda t: f(t)**2
-    I,e = quad(Ef,0,T)
-    return I;
+def fourierEf(array_f,T):
+    t = sym.Symbol('t')
+    funcion1= str(array_f[0].get()) + "**2"
+    funcion2= str(array_f[1].get()) + "**2"
+    funcion3= str(array_f[2].get()) + "**2"
+    print("valor de perido: " + str(T))
+    print("funcion1: " + funcion1)
+    print("funcion2: " + funcion2)
+    print("funcion3: " + funcion3)
+    I1 = sym.integrate(funcion1, (t,0,T))
+    I2 = sym.integrate(funcion2, (t,0,T))
+    I3 = sym.integrate(funcion3, (t,0,T))
+    #I1,e = quad(lambda t:funcion1,0,T)
+    #I2,e = quad(lambda t: funcion2,0,T)
+    #I3,e = quad(lambda t: funcion3,0,T)
+    print("############################")
+    print("integral 1: " + str(I1))
+    print("integral 1: " + str(I2))
+    print("integral 1: " + str(I3))
+    respuesta = I1 + I2 + I3
+    return respuesta;
 
 def fourier_a0(f, T):
     f1=lambda t: (1/T)*f(t)
@@ -153,7 +172,7 @@ def ventana_main():
     
     #####################################################################
     #obtencion de intervalos 1 y valor 1
-    data_val1= tkinter.DoubleVar()
+    data_val1= tkinter.StringVar()
     texto1 = tkinter.Label(main_window, text = "Escriba el primer valor de f(t): ", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 9")
     texto1.place(x = 20, y = 55)
     val1 = tkinter.Entry(main_window, textvariable = data_val1 , width = 5, relief = "flat")
@@ -176,7 +195,7 @@ def ventana_main():
 
     #####################################################################
     #obtencion de intervalos 2 y valor 2, append a areglos de valores e intervalos
-    data_val2=tkinter.DoubleVar()
+    data_val2=tkinter.StringVar()
     texto4 = tkinter.Label(main_window, text = "Escriba el segundo valor de f(t): ", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 9")
     texto4.place(x = 20, y = 2*55)
     val2 = tkinter.Entry(main_window, textvariable = data_val2 , width = 5, relief = "flat")
@@ -199,7 +218,7 @@ def ventana_main():
 
     #####################################################################
     #obtencion de intervalos 3 y valor 3
-    data_val3=tkinter.DoubleVar()
+    data_val3=tkinter.StringVar()
     texto7 = tkinter.Label(main_window, text = "Escriba el tercer valor de f(t): ", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 9")
     texto7.place(x = 20, y = 3*55)
     val3 = tkinter.Entry(main_window, textvariable = data_val3 , width = 5, relief = "flat")
@@ -225,7 +244,7 @@ def ventana_main():
 
     #envia y realiza todos los calculos con los datos recopilados
         #---captura de datos e ingreso en multiples tuplas
-    valores_f_array = (data_val1,data_val2,data_final3)
+    valores_f_array = (data_val1,data_val2,data_val3)
     inciales_f_array = (data_incial1,data_incial2,data_incial3)
     finales_f_array = (data_final1,data_final2,data_final3)
         #--captura de datos e ingreso en multiples tuplas
@@ -312,19 +331,16 @@ def calc_periodo(intervalo_incial, intervalo_final):
 
 #calcula el valor de los coeficientes de fourier
 def calc_ice(array_f,array_inciales, array_finales,T):
-    #se construye la funcion
-    t = np.linspace(-1, 1, 500)
-    funcion_f = buildFunction(array_f,array_inciales,array_finales,t)
-    operador_ice(funcion_f,T)
+    resultado=[]
+    ef=fourierEf(array_f,T)
+    print("integral de energia: " + str(ef))
+    print("########################################")
 
-    array = []
-    array.append("Ecuacion serie de fourier")
-    array.append("coeficiente 3")
-    array.append("coeficiente 2")
-    array.append("coeficiente 1")
-    print("calculo de coeficientes de fourier! ")
-    return array
-
-
+    #modificar que se agrega al arreglo para deplegar
+    #solo lo que se pide
+    resultado.append(ef)
+    resultado.append(ef)
+    resultado.append(ef)
+    return resultado
 
 ventana_main()
