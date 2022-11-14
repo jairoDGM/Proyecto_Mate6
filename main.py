@@ -71,20 +71,27 @@ def fourierEf(array_f,T):
     return respuesta;
 
 def fourier_a0(f, T):
-    f1=lambda t: (1/T)*f(t)
-    I,e = quad(f1,0,T)
+    t = sym.Symbol('t')
+    f1= str(1/T) + "*" + str(f)
+    I = sym.integrate(f1,(t,0,T))
     return I;
 
 
 def fourier_an(f, T, n):
-    f2 = lambda t : (2/T)*f(t)*np.cos(n*((2*np.pi)/T)*t)
-    I,e = quad(f2,0,T)
+    t = sym.Symbol('t')
+    argumento = n*((2*np.pi)/T)
+    f2 = str(2/T)+"*"+str(f)+"*"+"(cos("+str(argumento)+"*t))"
+    print("INTEGRAL ARMADA: "+f2)
+    I = sym.integrate(f2,(t,0,T))
     return I
 
 
 def fourier_bn(f, T, n):
-    f3 = lambda t : (2/T)*f(t)*np.sin(n*((2*np.pi)/T)*t)
-    I,e = quad(f3,0,T)
+    t = sym.Symbol('t')
+    argumento = n*((2*np.pi)/T)
+    f3 = str(2/T)+"*"+str(f)+"*"+"(sin("+str(argumento)+"*t))"
+    print("INTEGRAL ARMADA: "+f3)
+    I = sym.integrate(f3,(t,0,T))
     return I
 
 def suma_fourier1(f,T,N,t):
@@ -332,15 +339,22 @@ def calc_periodo(intervalo_incial, intervalo_final):
 #calcula el valor de los coeficientes de fourier
 def calc_ice(array_f,array_inciales, array_finales,T):
     resultado=[]
-    ef=fourierEf(array_f,T)
-    print("integral de energia: " + str(ef))
+    #ef=fourierEf(array_f,T)
+    a0 = fourier_a0(array_f[0].get(),2)
+    an = fourier_an(array_f[0].get(),2,1)
+    bn = fourier_bn(array_f[0].get(),2,1)
+    #print("integral de energia: " + str(ef))
+    print("PRUEBA A0: " + str(a0))
+    print("PRUEBA AN: " + str(an))
+    print("PRUEBA BN: " + str(bn))
     print("########################################")
+    #ecuacion = ef - ( (fourier_a0**2)*T + (T/2)*suma_ice() )
 
     #modificar que se agrega al arreglo para deplegar
     #solo lo que se pide
-    resultado.append(ef)
-    resultado.append(ef)
-    resultado.append(ef)
+    #resultado.append(ef)
+    #resultado.append(ef)
+    #resultado.append(ef)
     return resultado
 
 ventana_main()
