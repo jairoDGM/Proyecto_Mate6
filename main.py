@@ -337,7 +337,7 @@ def calc_periodo(intervalo_incial, intervalo_final):
     while(intervalo_incial < intervalo_final):
         intervalo_incial = intervalo_incial + 1
         periodo = periodo + 1
-    return periodo  #duda de si asi se calcula el periodo "periodo/2"
+    return periodo  
 
 #calcula el valor de los coeficientes de fourier
 def calc_ice(valor_n,array_f,array_inciales, array_finales,T):
