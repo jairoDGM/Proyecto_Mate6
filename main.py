@@ -266,7 +266,7 @@ def ventana_main():
     main_window.mainloop()
     
 #definicion que limpia los datos de los inputs
-def clean_data(entry1,entry2,entry3,entry4,entry5,entry6,entry7,entry8,entry9):
+def clean_data(entry1,entry2,entry3,entry4,entry5,entry6,entry7,entry8,entry9,valor_n):
     entry1.delete(0, END)
     entry2.delete(0, END)
     entry3.delete(0, END)
@@ -276,6 +276,7 @@ def clean_data(entry1,entry2,entry3,entry4,entry5,entry6,entry7,entry8,entry9):
     entry7.delete(0, END)
     entry8.delete(0, END)
     entry9.delete(0, END)
+    valor_n.delete(0, END)
     print("clean data funcionando!")
     
 #def que acciona todos los calculos
