@@ -96,14 +96,17 @@ def fourier_bn(f, T, n):
     return sum(I)
 
 
-def suma_ice(f,T,ef,pam1,a0):
+def suma_ice(f,T,ef,pam1,a0,valor_n):
     suma = []
     n=1
-    salida = False
     suma_parciaT = 0
-    while(salida != True):
+    while(n <= valor_n.get()):
         t = sym.Symbol('t')
-        suma_parciaT = pam1*(fourier_an(f,T,n) + fourier_bn(f,T,n))
+        parte1 = fourier_an(f,T,n)
+        parte2= fourier_bn(f,T,n)
+        print("PARTE 1: " + str(parte1))
+        print("PARTE2: " + str(parte2))
+        suma_parciaT = pam1*(parte1 + parte2)
         suma.append(suma_parciaT)
         n+=1
 
@@ -111,13 +114,21 @@ def suma_ice(f,T,ef,pam1,a0):
         print("SUMA REALIZADA: " + str(ecuacion))
 
         print("VALOR LIMITE"+str(0.02*ef))
-        if( ecuacion > 0.02*ef ):
-            salida = True
-            n = n-1
-            break
-    return n
+        
+    return n-1
 
-
+def sft_constructor(array_result,T):
+    t = sym.Symbol('t')
+    n=1
+    sigma=0
+    while(n <= array_result[4]):
+        argumento1 = t*(n*2*np.pi/T)
+        parte1= array_result[2]*sym.cos(argumento1)
+        parte2 = array_result[3]*sym.sin(argumento1)
+        sigma = sigma + (parte1 + parte2)
+        n+=1
+    sigma = sigma + array_result[1]
+    return sigma
 
 
 #############################################
@@ -224,6 +235,12 @@ def ventana_main():
     data_final3=tkinter.DoubleVar()
     final3 = tkinter.Entry(main_window, textvariable = data_final3 , width = 5, relief = "flat")
     final3.place(x = 555, y = 3*55)
+
+    valor_n=tkinter.DoubleVar()
+    texto7 = tkinter.Label(main_window, text = "Escriba el valor de n deseado de f(t): ", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 9")
+    texto7.place(x = 20, y = 3*55 + 30)
+    val3 = tkinter.Entry(main_window, textvariable = valor_n , width = 5, relief = "flat")
+    val3.place(x = 227, y = 3*55 + 30)
     #obtencion de intervalos 3 y valor 3
     ###############################################################################
 
@@ -236,11 +253,11 @@ def ventana_main():
     inciales_f_array = (data_incial1,data_incial2,data_incial3)
     finales_f_array = (data_final1,data_final2,data_final3)
         #--captura de datos e ingreso en multiples tuplas
-    botoncalculo = tkinter.Button(main_window, text = "Calcular", command =lambda: accionador_calculador(valores_f_array,inciales_f_array,finales_f_array, main_window), cursor = "hand2", width = 12, relief = "flat")
+    botoncalculo = tkinter.Button(main_window, text = "Calcular", command =lambda: accionador_calculador(valor_n,valores_f_array,inciales_f_array,finales_f_array, main_window), cursor = "hand2", width = 12, relief = "flat")
     botoncalculo.place(x = 600, y = 78)
 
     #limpia todos los datos de los inputs
-    cleaner = tkinter.Button(main_window, text = "Limpiar Datos", command =lambda: clean_data(val1,inicia1,final1,val2,inicia2,final2,val3,inicia3,final3), cursor = "hand2", width = 12, relief = "flat")
+    cleaner = tkinter.Button(main_window, text = "Limpiar Datos", command =lambda: clean_data(val1,inicia1,final1,val2,inicia2,final2,val3,inicia3,final3,valor_n), cursor = "hand2", width = 12, relief = "flat")
     cleaner.place(x = 600, y = 2*68)
 
     #Configuracion de botones en main_window
@@ -262,7 +279,7 @@ def clean_data(entry1,entry2,entry3,entry4,entry5,entry6,entry7,entry8,entry9):
     print("clean data funcionando!")
     
 #def que acciona todos los calculos
-def accionador_calculador(array_f,array_inciales,array_finales,ventana):
+def accionador_calculador(valor_n,array_f,array_inciales,array_finales,ventana):
     print("prueba de array "+ str(array_f[0].get()))
     #------
     #Llama al metodo que calcula el periodo y lo despliega en pantalla
@@ -275,7 +292,7 @@ def accionador_calculador(array_f,array_inciales,array_finales,ventana):
     #-----
     #-----
     #recibe un array con los resultados de los coeficientes y lo despliega en pantalla
-    array = calc_ice( array_f,array_inciales, array_finales,periodo)
+    array = calc_ice( valor_n,array_f,array_inciales, array_finales,periodo)
         #-para a0
     texto = tkinter.Label(ventana, text = "Coeficiente A0", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 10")
     texto.place(x = 20, y = 300)
@@ -302,6 +319,12 @@ def accionador_calculador(array_f,array_inciales,array_finales,ventana):
     #recibe el valor de N de ICE y lo despliega en pantalla
     #-----
     #-----
+    sft = sft_constructor(array,periodo)
+    texto = tkinter.Label(ventana, text = "Valor del SFT Final: ", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 10")
+    texto.place(x = 20, y = 450)
+    respuesta0 = tkinter.Label(ventana, text = str(sft), relief = "flat", bg = '#1F618D', fg = "#17202A", font = "Helvetica 10")
+    respuesta0.place(x = 20, y = 470)
+    #-----
     #-----
     print("accionador calculador funcionando!")
 
@@ -317,17 +340,17 @@ def calc_periodo(intervalo_incial, intervalo_final):
     return periodo  #duda de si asi se calcula el periodo "periodo/2"
 
 #calcula el valor de los coeficientes de fourier
-def calc_ice(array_f,array_inciales, array_finales,T):
+def calc_ice(valor_n,array_f,array_inciales, array_finales,T):
     resultado=[]
     ef=fourierEf(array_f,T)
     a0 = fourier_a0(array_f,2)
-    
+
 
     print("integral de energia: " + str(ef))
     print("PRUEBA A0: " + str(a0))
     print("########################################")
     #obtiene el n necesario para calcular los coeficientes
-    ecuacion = suma_ice(array_f,T,ef,(T/2),a0)
+    ecuacion = suma_ice(array_f,T,ef,(T/2),a0,valor_n)
 
     #calculos con el valor de N obtenido
     an = fourier_an(array_f,T,ecuacion)
