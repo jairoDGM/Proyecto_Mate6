@@ -321,6 +321,7 @@ def calc_ice(array_f,array_inciales, array_finales,T):
     resultado=[]
     ef=fourierEf(array_f,T)
     a0 = fourier_a0(array_f,2)
+    
 
     print("integral de energia: " + str(ef))
     print("PRUEBA A0: " + str(a0))
