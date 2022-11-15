@@ -28,31 +28,13 @@ warnings.filterwarnings("ignore")
 #############################################
 ####DECLARACION METODOS DE SERIES
 
-def buildFunction(array_f,array_iniciales,array_finales,t):
-    resultado=0
-    print("")
-    print("t:"+str(t))
-    print("valor:"+str(array_f[1].get()))
-    print("incial:"+str(array_iniciales[1].get()))
-    print("final:"+str(array_finales[1].get()))
-    if (t>array_iniciales[0].get()) and (t<array_finales[0].get()):
-        print("entramos en 1")
-        resultado=array_f[0].get()
-    elif (t>array_iniciales[1].get()) and (t<array_finales[1].get()):
-        print("entramos en 2")
-        resultado=array_f[1].get()
-    elif (t>array_iniciales[2].get()) and (t<array_finales[2].get()):
-        print("entramos en 3")
-        resultado=array_f[2].get()
-    print("valor obtenido por y: " + str(resultado))
-    return resultado
-
 
 def fourierEf(array_f,T):
     t = sym.Symbol('t')
-    funcion1= str(array_f[0].get()) + "**2"
-    funcion2= str(array_f[1].get()) + "**2"
-    funcion3= str(array_f[2].get()) + "**2"
+    funcion1= "("+str(array_f[0].get())+")" + "**2"
+    funcion2= "("+str(array_f[1].get())+")" + "**2"
+    funcion3= "("+str(array_f[2].get())+")" + "**2"
+    
     print("valor de perido: " + str(T))
     print("funcion1: " + funcion1)
     print("funcion2: " + funcion2)
@@ -87,12 +69,13 @@ def fourier_an(f, T, n):
     contador = 0
     I = []
     while(contador <= 2):
-        f2 = f[contador].get
+        f2 = f[contador].get()
         t = sym.Symbol('t')
         argumento = n*((2*np.pi)/T)
-        ecuacion = str(2/T)+"*"+str(f2)+"*"+"(cos("+str(argumento)+"*t))"
-        print("INTEGRAL ARMADA: "+ecuacion)
-        I.append(sym.integrate(ecuacion,(t,0,T)))
+        ecuacion = str(2/T) + "*" + str(f2) + "*" + "(cos(" + str(argumento) + "*t))"
+        print("INTEGRAL AN: "+ecuacion+ " DE: " + str(f2))
+        operacion = sym.integrate(ecuacion,(t,0,T))
+        I.append(operacion)
         contador = contador + 1
     
     return sum(I)
@@ -106,53 +89,33 @@ def fourier_bn(f, T, n):
         t = sym.Symbol('t')
         argumento = n*((2*np.pi)/T)
         ecuacion = str(2/T)+"*"+str(f3)+"*"+"(sin("+str(argumento)+"*t))"
-        print("INTEGRAL ARMADA: "+ecuacion)
+        print("INTEGRAL ARMADA BN: "+ecuacion+" DE: " + str(f3))
         I.append(sym.integrate(ecuacion,(t,0,T)))
         contador = contador + 1
 
     return sum(I)
 
-def suma_fourier1(f,T,N,t):
-    suma = []
-    n=1
-    while(n<=N):
-        suma_parciaT=((fourier_an(f,T,n))*np.cos(n*((2*np.pi)/T)*t)+(fourier_bn(f,T,n)*np.sin(n*((2*np.pi)/T)*t)))
-        suma.append(suma_parciaT)
-        n+=1
-    return suma
 
-def fourier_suma_parciaT(f, T, N):
-    res= lambda t:suma_fourier1(f,T,N,t)
-    return  lambda t: fourier_a0(f,T) + sum(res(t))
-
-def suma_ice(f,T,t,ef,pam1):
+def suma_ice(f,T,ef,pam1,a0):
     suma = []
     n=1
     salida = False
-    while(salida == False):
-        suma_parciaT=((fourier_an(f,T,n))*np.cos(n*((2*np.pi)/T)*t)+(fourier_bn(f,T,n)*np.sin(n*((2*np.pi)/T)*t)))
+    suma_parciaT = 0
+    while(salida != True):
+        t = sym.Symbol('t')
+        suma_parciaT = pam1*(fourier_an(f,T,n) + fourier_bn(f,T,n))
         suma.append(suma_parciaT)
         n+=1
-        t2 = np.linspace(-1, 1, 500)
-        ploteo = [s(t2) for s in suma]
-        comprobacion = sum(ploteo)
-        if( comprobacion > 0.02*ef(t2) ):
+
+        ecuacion = ef - ( (a0**2)*T + sum(suma))
+        print("SUMA REALIZADA: " + str(ecuacion))
+
+        print("VALOR LIMITE"+str(0.02*ef))
+        if( ecuacion > 0.02*ef ):
             salida = True
+            n = n-1
+            break
     return n
-
-def operador_ice(f,T):
-    resultado=0
-    ef = fourierEf(f,T)
-    a0 = fourier_a0(f,T)
-
-    ecuacion_n = lambda t: ef - ( (a0**2)*T + (T/2)* suma_ice(f,T,t,ef))
-    print("valor de n para ICE: " + ecuacion_n)
-    an = fourier_an(f,T)
-    ab = fourier_bn(f,T)
-
-
-
-
 
 
 
@@ -316,27 +279,26 @@ def accionador_calculador(array_f,array_inciales,array_finales,ventana):
         #-para a0
     texto = tkinter.Label(ventana, text = "Coeficiente A0", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 10")
     texto.place(x = 20, y = 300)
-    respuesta0 = tkinter.Label(ventana, text = array.pop(), relief = "flat", bg = '#1F618D', fg = "#17202A", font = "Helvetica 10")
+    respuesta0 = tkinter.Label(ventana, text = str(array[1]), relief = "flat", bg = '#1F618D', fg = "#17202A", font = "Helvetica 10")
     respuesta0.place(x = 110, y = 300)
         #-para an
     texto = tkinter.Label(ventana, text = "Coeficiente An", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 10")
     texto.place(x = 20, y = 330)
-    respuesta0 = tkinter.Label(ventana, text = array.pop(), relief = "flat", bg = '#1F618D', fg = "#17202A", font = "Helvetica 10")
+    respuesta0 = tkinter.Label(ventana, text = str(array[2]), relief = "flat", bg = '#1F618D', fg = "#17202A", font = "Helvetica 10")
     respuesta0.place(x = 110, y = 330)
         #-para bn
     texto = tkinter.Label(ventana, text = "Coeficiente Bn", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 10")
     texto.place(x = 20, y = 360)
-    respuesta0 = tkinter.Label(ventana, text = array.pop(), relief = "flat", bg = '#1F618D', fg = "#17202A", font = "Helvetica 10")
+    respuesta0 = tkinter.Label(ventana, text = str(array[3]), relief = "flat", bg = '#1F618D', fg = "#17202A", font = "Helvetica 10")
     respuesta0.place(x = 110, y = 360)
     #recibe un array con los resultados de los coeficientes y lo despliega en pantalaa
     #-----
     #-----
     #recibe el valor de N de ICE y lo despliega en pantalla
-    #n = calc_ice()
-    #texto = tkinter.Label(ventana, text = "Valor de N", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 10")
-    #texto.place(x = 20, y = 390)
-    #respuesta0 = tkinter.Label(ventana, text = n, relief = "flat", bg = '#1F618D', fg = "#17202A", font = "Helvetica 10")
-    #respuesta0.place(x = 87, y = 390)
+    texto = tkinter.Label(ventana, text = "Valor de N", relief = "flat", bg = '#303030', fg = "#FFFFFF", font = "Helvetica 10")
+    texto.place(x = 20, y = 390)
+    respuesta0 = tkinter.Label(ventana, text = str(array[4]), relief = "flat", bg = '#1F618D', fg = "#17202A", font = "Helvetica 10")
+    respuesta0.place(x = 87, y = 390)
     #recibe el valor de N de ICE y lo despliega en pantalla
     #-----
     #-----
@@ -360,21 +322,21 @@ def calc_ice(array_f,array_inciales, array_finales,T):
     ef=fourierEf(array_f,T)
     a0 = fourier_a0(array_f,2)
 
-    an = fourier_an(array_f[0].get(),2,1)
-    bn = fourier_bn(array_f[0].get(),2,1)
-
     print("integral de energia: " + str(ef))
     print("PRUEBA A0: " + str(a0))
-    print("PRUEBA AN: " + str(an))
-    print("PRUEBA BN: " + str(bn))
     print("########################################")
-    ecuacion = ef - ( (a0**2)*T + suma_ice() )
+    #obtiene el n necesario para calcular los coeficientes
+    ecuacion = suma_ice(array_f,T,ef,(T/2),a0)
 
-    #modificar que se agrega al arreglo para deplegar
-    #solo lo que se pide
-    #resultado.append(ef)
-    #resultado.append(ef)
-    #resultado.append(ef)
+    #calculos con el valor de N obtenido
+    an = fourier_an(array_f,T,ecuacion)
+    bn = fourier_bn(array_f,T,ecuacion)
+
+    resultado.append(ef)
+    resultado.append(a0)
+    resultado.append(an)
+    resultado.append(bn)
+    resultado.append(ecuacion)
     return resultado
 
 ventana_main()
